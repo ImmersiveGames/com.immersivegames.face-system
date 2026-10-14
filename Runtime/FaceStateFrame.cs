@@ -10,9 +10,11 @@ namespace ImmersiveGames.FaceSystem
         public sealed class TrackState
         {
             [SerializeField]
+            [HideInInspector]
             private string trackId;
 
             [SerializeField]
+            [HideInInspector]
             private string defaultFrameId;
 
             [SerializeField]
@@ -134,13 +136,19 @@ namespace ImmersiveGames.FaceSystem
         public struct StateFrame
         {
             [SerializeField]
+            [HideInInspector]
             private string frameId;
 
             [SerializeField]
+            [HideInInspector]
             private string spriteId;
+
+            [SerializeField]
+            private string displayName;
 
             public string FrameId => frameId;
             public string SpriteId => spriteId;
+            public string DisplayName => displayName;
         }
     }
 

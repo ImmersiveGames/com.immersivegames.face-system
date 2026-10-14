@@ -66,6 +66,16 @@ namespace ImmersiveGames.FaceSystem
                 return false;
             }
 
+            return SetState(state);
+        }
+
+        public bool SetState(FaceState state)
+        {
+            if (state == null || states == null || !states.Contains(state))
+            {
+                return false;
+            }
+
             if (!CanApplyState(state, out string error))
             {
                 if (debugLogging)
@@ -80,7 +90,7 @@ namespace ImmersiveGames.FaceSystem
 
             if (debugLogging)
             {
-                Debug.Log($"Applying state: {stateId}", this);
+                Debug.Log($"Applying state: {state.name}", this);
             }
 
             StopAllAnimations();
@@ -94,6 +104,16 @@ namespace ImmersiveGames.FaceSystem
             if (string.IsNullOrWhiteSpace(animationId)
                 || animationLookup == null
                 || !animationLookup.TryGetValue(animationId, out FaceAnimation animation))
+            {
+                return false;
+            }
+
+            return PlayAnimation(animation);
+        }
+
+        public bool PlayAnimation(FaceAnimation animation)
+        {
+            if (animation == null || animations == null || !animations.Contains(animation))
             {
                 return false;
             }
@@ -119,7 +139,7 @@ namespace ImmersiveGames.FaceSystem
 
             if (debugLogging)
             {
-                Debug.Log($"Playing animation: {animationId}", this);
+                Debug.Log($"Playing animation: {animation.name}", this);
             }
 
             activePlayers.Add(player);
@@ -142,6 +162,17 @@ namespace ImmersiveGames.FaceSystem
                     activePlayers.RemoveAt(i);
                 }
             }
+        }
+
+        public bool StopAnimation(FaceSpriteLibrary library, string trackName)
+        {
+            if (library == null || !library.TryGetTrackByName(trackName, out FaceSpriteLibrary.SpriteTrack track))
+            {
+                return false;
+            }
+
+            StopAnimation(track.TrackId);
+            return true;
         }
 
         public void StopAllAnimations()
@@ -295,23 +326,21 @@ namespace ImmersiveGames.FaceSystem
         {
             error = null;
 
-            if (state == null || string.IsNullOrWhiteSpace(state.Id))
+            if (state == null)
             {
-                error = "State is null or has an empty ID.";
+                error = "State is null.";
                 return false;
             }
 
-            if (stateLookup == null
-                || !stateLookup.TryGetValue(state.Id, out FaceState registeredState)
-                || registeredState != state)
+            if (states == null || !states.Contains(state))
             {
-                error = $"State '{state.Id}' is not uniquely registered in this controller.";
+                error = $"State '{state.name}' is not registered in this controller.";
                 return false;
             }
 
             if (state.SpriteLibrary == null || state.TrackStates == null || state.TrackStates.Count == 0)
             {
-                error = $"State '{state.Id}' has no valid sprite library or track states.";
+                error = $"State '{state.name}' has no valid sprite library or track states.";
                 return false;
             }
 
@@ -364,9 +393,15 @@ namespace ImmersiveGames.FaceSystem
         {
             error = null;
 
-            if (animation == null || string.IsNullOrWhiteSpace(animation.Id))
+            if (animation == null)
             {
-                error = "Animation is null or has an empty ID.";
+                error = "Animation is null.";
+                return false;
+            }
+
+            if (animations == null || !animations.Contains(animation))
+            {
+                error = $"Animation '{animation.name}' is not registered in this controller.";
                 return false;
             }
 
@@ -644,7 +679,7 @@ namespace ImmersiveGames.FaceSystem
                 intervalTimers[animation] = 0f;
 
                 if (!IsAnyTrackPlaying(animation)
-                    && !PlayAnimation(animation.Id)
+                    && !PlayAnimation(animation)
                     && debugLogging)
                 {
                     Debug.LogWarning($"Interval animation '{animation.Id}' could not start.", this);
@@ -812,6 +847,7 @@ namespace ImmersiveGames.FaceSystem
         public sealed class TrackBinding
         {
             [SerializeField]
+            [HideInInspector]
             private string trackId;
 
             [SerializeField]

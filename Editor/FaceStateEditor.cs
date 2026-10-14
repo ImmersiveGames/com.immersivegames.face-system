@@ -23,19 +23,17 @@ namespace ImmersiveGames.FaceSystem.Editor
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
+            FaceEditorUtility.EnsureId(idProperty);
+            int repairedFrameKeys = EnsureFrameKeys();
 
-            EditorGUILayout.LabelField("Identity", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(idProperty);
-
-            if (string.IsNullOrWhiteSpace(idProperty.stringValue))
-            {
-                EditorGUILayout.HelpBox("A stable ID is required.", MessageType.Error);
-            }
-            else
+            EditorGUILayout.HelpBox(
+                "This asset has an internal generated identity. Use the asset reference when selecting a state in code.",
+                MessageType.Info);
+            if (repairedFrameKeys > 0)
             {
                 EditorGUILayout.HelpBox(
-                    "This ID is a stable contract and does not change when the asset is renamed.",
-                    MessageType.Info);
+                    $"Generated new keys for {repairedFrameKeys} duplicate frames. Existing animation links still resolve to the first frame; select the intended named frame where needed.",
+                    MessageType.Warning);
             }
 
             EditorGUILayout.Space();
@@ -46,14 +44,14 @@ namespace ImmersiveGames.FaceSystem.Editor
             if (library == null)
             {
                 EditorGUILayout.HelpBox(
-                    "Assign a FaceSpriteLibrary to select Track IDs and Sprite IDs.",
+                    "Assign a FaceSpriteLibrary to select named tracks and sprites.",
                     MessageType.Warning);
             }
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Track States", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
-                "Each Track State maps semantic Frame IDs to sprites and selects an explicit default frame.",
+                "Each Track State maps named frames to sprites and selects an explicit default frame.",
                 MessageType.Info);
 
             for (int i = 0; i < trackStatesProperty.arraySize; i++)
@@ -73,6 +71,34 @@ namespace ImmersiveGames.FaceSystem.Editor
             serializedObject.ApplyModifiedProperties();
         }
 
+        private int EnsureFrameKeys()
+        {
+            int repairedFrameKeys = 0;
+
+            for (int i = 0; i < trackStatesProperty.arraySize; i++)
+            {
+                SerializedProperty trackState = trackStatesProperty.GetArrayElementAtIndex(i);
+                SerializedProperty frames = trackState.FindPropertyRelative("frames");
+
+                for (int frameIndex = 0; frameIndex < frames.arraySize; frameIndex++)
+                {
+                    SerializedProperty frame = frames.GetArrayElementAtIndex(frameIndex);
+                    SerializedProperty frameId = frame.FindPropertyRelative("frameId");
+                    SerializedProperty displayName = frame.FindPropertyRelative("displayName");
+                    string previousId = frameId.stringValue;
+                    FaceEditorUtility.EnsureDisplayName(
+                        displayName,
+                        previousId,
+                        $"Frame {frameIndex + 1}");
+                    FaceEditorUtility.EnsureId(frameId);
+                }
+
+                repairedFrameKeys += FaceEditorUtility.EnsureUniqueIds(frames, "frameId");
+            }
+
+            return repairedFrameKeys;
+        }
+
         private static bool DrawTrackState(
             SerializedProperty trackState,
             int index,
@@ -82,18 +108,27 @@ namespace ImmersiveGames.FaceSystem.Editor
             SerializedProperty defaultFrameIdProperty = trackState.FindPropertyRelative("defaultFrameId");
             SerializedProperty framesProperty = trackState.FindPropertyRelative("frames");
 
+            for (int i = 0; i < framesProperty.arraySize; i++)
+            {
+                SerializedProperty frame = framesProperty.GetArrayElementAtIndex(i);
+                SerializedProperty frameId = frame.FindPropertyRelative("frameId");
+                SerializedProperty displayName = frame.FindPropertyRelative("displayName");
+                string previousId = frameId.stringValue;
+                FaceEditorUtility.EnsureId(frameId);
+                FaceEditorUtility.EnsureDisplayName(displayName, previousId, $"Frame {i + 1}");
+            }
+
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            string title = string.IsNullOrWhiteSpace(trackIdProperty.stringValue)
-                ? $"Track State {index}"
-                : trackIdProperty.stringValue;
+            string title = FaceEditorUtility.GetTrackLabel(library, trackIdProperty.stringValue);
             trackState.isExpanded = EditorGUILayout.Foldout(trackState.isExpanded, title, true);
 
             if (trackState.isExpanded)
             {
                 FaceEditorUtility.DrawIdPopup(
                     trackIdProperty,
-                    "Track Id",
-                    FaceEditorUtility.GetTrackIds(library));
+                    "Track",
+                    FaceEditorUtility.GetTrackIds(library),
+                    FaceEditorUtility.GetTrackLabels(library));
 
                 string trackId = trackIdProperty.stringValue;
                 DrawDefaultFrame(defaultFrameIdProperty, framesProperty);
@@ -102,6 +137,7 @@ namespace ImmersiveGames.FaceSystem.Editor
                 EditorGUILayout.LabelField("Frame Mappings", EditorStyles.boldLabel);
 
                 string[] spriteIds = FaceEditorUtility.GetSpriteIds(library, trackId);
+                string[] spriteLabels = FaceEditorUtility.GetSpriteLabels(library, trackId);
 
                 for (int i = 0; i < framesProperty.arraySize; i++)
                 {
@@ -110,7 +146,8 @@ namespace ImmersiveGames.FaceSystem.Editor
                         i,
                         library,
                         trackId,
-                        spriteIds))
+                        spriteIds,
+                        spriteLabels))
                     {
                         string removedFrameId = framesProperty
                             .GetArrayElementAtIndex(i)
@@ -148,20 +185,21 @@ namespace ImmersiveGames.FaceSystem.Editor
             SerializedProperty framesProperty)
         {
             string[] frameIds = GetFrameIds(framesProperty);
+            string[] frameLabels = GetFrameLabels(framesProperty);
             FaceEditorUtility.DrawIdPopup(
                 defaultFrameIdProperty,
-                "Default Frame Id",
+                "Default Frame",
                 frameIds,
-                false);
+                frameLabels);
 
             if (string.IsNullOrWhiteSpace(defaultFrameIdProperty.stringValue))
             {
-                EditorGUILayout.HelpBox("Default Frame ID is required.", MessageType.Error);
+                EditorGUILayout.HelpBox("A Default Frame selection is required.", MessageType.Error);
             }
             else if (System.Array.IndexOf(frameIds, defaultFrameIdProperty.stringValue) < 0)
             {
                 EditorGUILayout.HelpBox(
-                    $"Default Frame ID '{defaultFrameIdProperty.stringValue}' is missing from the mappings.",
+                    "The selected default frame is missing from this track's mappings.",
                     MessageType.Error);
             }
         }
@@ -171,13 +209,18 @@ namespace ImmersiveGames.FaceSystem.Editor
             int index,
             FaceSpriteLibrary library,
             string trackId,
-            string[] spriteIds)
+            string[] spriteIds,
+            string[] spriteLabels)
         {
             SerializedProperty frameIdProperty = frameProperty.FindPropertyRelative("frameId");
             SerializedProperty spriteIdProperty = frameProperty.FindPropertyRelative("spriteId");
+            SerializedProperty displayNameProperty = frameProperty.FindPropertyRelative("displayName");
+            string previousId = frameIdProperty.stringValue;
+            FaceEditorUtility.EnsureId(frameIdProperty);
+            FaceEditorUtility.EnsureDisplayName(displayNameProperty, previousId, $"Frame {index + 1}");
 
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            EditorGUILayout.LabelField($"Frame Mapping {index}", EditorStyles.miniBoldLabel);
+            EditorGUILayout.LabelField(displayNameProperty.stringValue, EditorStyles.miniBoldLabel);
             EditorGUILayout.BeginHorizontal();
 
             Rect previewRect = GUILayoutUtility.GetRect(
@@ -192,8 +235,8 @@ namespace ImmersiveGames.FaceSystem.Editor
                 spriteIdProperty.stringValue);
 
             EditorGUILayout.BeginVertical();
-            EditorGUILayout.PropertyField(frameIdProperty, new GUIContent("Semantic Frame Id"));
-            FaceEditorUtility.DrawIdPopup(spriteIdProperty, "Sprite Id", spriteIds);
+            EditorGUILayout.PropertyField(displayNameProperty, new GUIContent("Frame Name"));
+            FaceEditorUtility.DrawIdPopup(spriteIdProperty, "Sprite", spriteIds, spriteLabels);
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();
 
@@ -221,7 +264,9 @@ namespace ImmersiveGames.FaceSystem.Editor
             int index = framesProperty.arraySize;
             framesProperty.InsertArrayElementAtIndex(index);
             SerializedProperty frame = framesProperty.GetArrayElementAtIndex(index);
-            frame.FindPropertyRelative("frameId").stringValue = string.Empty;
+            frame.FindPropertyRelative("frameId").stringValue =
+                FaceEditorUtility.CreateUniqueId(framesProperty, "frameId");
+            frame.FindPropertyRelative("displayName").stringValue = $"Frame {index + 1}";
             frame.FindPropertyRelative("spriteId").stringValue =
                 spriteIds.Length > 0 ? spriteIds[0] : string.Empty;
         }
@@ -244,6 +289,23 @@ namespace ImmersiveGames.FaceSystem.Editor
             }
 
             return ids.ToArray();
+        }
+
+        private static string[] GetFrameLabels(SerializedProperty framesProperty)
+        {
+            string[] labels = new string[framesProperty.arraySize];
+
+            for (int i = 0; i < framesProperty.arraySize; i++)
+            {
+                SerializedProperty frame = framesProperty.GetArrayElementAtIndex(i);
+                SerializedProperty displayName = frame.FindPropertyRelative("displayName");
+                string name = string.IsNullOrWhiteSpace(displayName.stringValue)
+                    ? $"Frame {i + 1}"
+                    : displayName.stringValue;
+                labels[i] = $"Frame {i + 1}: {name}";
+            }
+
+            return labels;
         }
     }
 

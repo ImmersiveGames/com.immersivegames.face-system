@@ -10,7 +10,11 @@ namespace ImmersiveGames.FaceSystem
         public sealed class SpriteTrack
         {
             [SerializeField]
+            [HideInInspector]
             private string trackId;
+
+            [SerializeField]
+            private string displayName;
 
             [SerializeField]
             private Texture2D atlas;
@@ -24,6 +28,7 @@ namespace ImmersiveGames.FaceSystem
             private Dictionary<string, Vector2Int> spriteLookup;
 
             public string TrackId => trackId;
+            public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? trackId : displayName;
             public Texture2D Atlas => atlas;
             public Vector2Int GridSize => gridSize;
             public IReadOnlyList<SpriteEntry> Sprites => sprites;
@@ -121,12 +126,17 @@ namespace ImmersiveGames.FaceSystem
         public struct SpriteEntry
         {
             [SerializeField]
+            [HideInInspector]
             private string id;
+
+            [SerializeField]
+            private string displayName;
 
             [SerializeField]
             private Vector2Int atlasCoordinate;
 
             public string Id => id;
+            public string DisplayName => displayName;
             public Vector2Int AtlasCoordinate => atlasCoordinate;
         }
     }

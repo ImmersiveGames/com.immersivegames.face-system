@@ -9,6 +9,7 @@ namespace ImmersiveGames.FaceSystem
     public sealed partial class FaceAnimation : ScriptableObject
     {
         [SerializeField]
+        [HideInInspector]
         private string id;
 
         [SerializeField]

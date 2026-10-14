@@ -10,6 +10,7 @@ namespace ImmersiveGames.FaceSystem
         public sealed class AnimationTrack
         {
             [SerializeField]
+            [HideInInspector]
             private string trackId;
 
             [SerializeField]

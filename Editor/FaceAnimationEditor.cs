@@ -30,20 +30,11 @@ namespace ImmersiveGames.FaceSystem.Editor
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
+            FaceEditorUtility.EnsureId(idProperty);
 
-            EditorGUILayout.LabelField("Identity", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(idProperty);
-
-            if (string.IsNullOrWhiteSpace(idProperty.stringValue))
-            {
-                EditorGUILayout.HelpBox("A stable ID is required.", MessageType.Error);
-            }
-            else
-            {
-                EditorGUILayout.HelpBox(
-                    "This ID is a stable contract and does not change when the asset is renamed.",
-                    MessageType.Info);
-            }
+            EditorGUILayout.HelpBox(
+                "This asset has an internal generated identity. Use the asset reference when selecting an animation in code.",
+                MessageType.Info);
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Playback", EditorStyles.boldLabel);
@@ -99,9 +90,11 @@ namespace ImmersiveGames.FaceSystem.Editor
             SerializedProperty spriteFramesProperty = trackProperty.FindPropertyRelative("spriteFrames");
 
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            string title = string.IsNullOrWhiteSpace(trackIdProperty.stringValue)
-                ? $"Animation Track {index}"
-                : trackIdProperty.stringValue;
+            string title = FaceEditorUtility.GetTrackLabel(
+                sourceModeProperty.enumValueIndex == (int)FaceAnimation.FrameSourceMode.FromState
+                    ? templateState != null ? templateState.SpriteLibrary : null
+                    : spriteLibrary,
+                trackIdProperty.stringValue);
             trackProperty.isExpanded = EditorGUILayout.Foldout(trackProperty.isExpanded, title, true);
 
             if (trackProperty.isExpanded)
@@ -115,7 +108,10 @@ namespace ImmersiveGames.FaceSystem.Editor
                     ? FaceEditorUtility.GetTrackIds(templateState)
                     : FaceEditorUtility.GetTrackIds(spriteLibrary);
 
-                FaceEditorUtility.DrawIdPopup(trackIdProperty, "Track Id", trackIds);
+                string[] trackLabels = fromState
+                    ? FaceEditorUtility.GetTrackLabels(templateState)
+                    : FaceEditorUtility.GetTrackLabels(spriteLibrary);
+                FaceEditorUtility.DrawIdPopup(trackIdProperty, "Track", trackIds, trackLabels);
                 string trackId = trackIdProperty.stringValue;
 
                 if (fromState)
@@ -149,11 +145,12 @@ namespace ImmersiveGames.FaceSystem.Editor
             if (templateState == null)
             {
                 EditorGUILayout.HelpBox(
-                    "Assign a Template State to select semantic Frame IDs.",
+                    "Assign a Template State to select named frames.",
                     MessageType.Warning);
             }
 
             string[] frameIds = FaceEditorUtility.GetStateFrameIds(templateState, trackId);
+            string[] frameLabels = FaceEditorUtility.GetStateFrameLabels(templateState, trackId);
 
             for (int i = 0; i < framesProperty.arraySize; i++)
             {
@@ -175,7 +172,7 @@ namespace ImmersiveGames.FaceSystem.Editor
                     frameId.stringValue);
 
                 EditorGUILayout.BeginVertical();
-                FaceEditorUtility.DrawIdPopup(frameId, "Frame Id", frameIds);
+                FaceEditorUtility.DrawIdPopup(frameId, "Frame", frameIds, frameLabels);
                 EditorGUILayout.PropertyField(duration);
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.EndHorizontal();
@@ -212,11 +209,12 @@ namespace ImmersiveGames.FaceSystem.Editor
             if (library == null)
             {
                 EditorGUILayout.HelpBox(
-                    "Assign a FaceSpriteLibrary to select custom Sprite IDs.",
+                    "Assign a FaceSpriteLibrary to select named sprites.",
                     MessageType.Warning);
             }
 
             string[] spriteIds = FaceEditorUtility.GetSpriteIds(library, trackId);
+            string[] spriteLabels = FaceEditorUtility.GetSpriteLabels(library, trackId);
 
             for (int i = 0; i < framesProperty.arraySize; i++)
             {
@@ -238,7 +236,7 @@ namespace ImmersiveGames.FaceSystem.Editor
                     spriteId.stringValue);
 
                 EditorGUILayout.BeginVertical();
-                FaceEditorUtility.DrawIdPopup(spriteId, "Sprite Id", spriteIds);
+                FaceEditorUtility.DrawIdPopup(spriteId, "Sprite", spriteIds, spriteLabels);
                 EditorGUILayout.PropertyField(duration);
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.EndHorizontal();

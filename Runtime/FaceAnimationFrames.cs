@@ -9,6 +9,7 @@ namespace ImmersiveGames.FaceSystem
         public struct StateFrame
         {
             [SerializeField]
+            [HideInInspector]
             private string frameId;
 
             [SerializeField]
@@ -22,6 +23,7 @@ namespace ImmersiveGames.FaceSystem
         public struct SpriteFrame
         {
             [SerializeField]
+            [HideInInspector]
             private string spriteId;
 
             [SerializeField]

@@ -70,16 +70,16 @@ namespace ImmersiveGames.FaceSystem.Samples.Editor
                 SerializedProperty itemProperty = statesProperty.GetArrayElementAtIndex(i);
                 FaceState state = itemProperty.objectReferenceValue as FaceState;
 
-                if (state == null || string.IsNullOrWhiteSpace(state.Id))
+                if (state == null)
                 {
                     continue;
                 }
 
-                if (GUILayout.Button(state.Id))
+                if (GUILayout.Button(state.name))
                 {
-                    operationError = controller.SetState(state.Id)
+                    operationError = controller.SetState(state)
                         ? null
-                        : $"Could not apply state '{state.Id}'. Check the controller configuration and Console.";
+                        : $"Could not apply state '{state.name}'. Check the controller configuration and Console.";
                 }
             }
         }
@@ -99,16 +99,16 @@ namespace ImmersiveGames.FaceSystem.Samples.Editor
                 SerializedProperty itemProperty = animationsProperty.GetArrayElementAtIndex(i);
                 FaceAnimation animation = itemProperty.objectReferenceValue as FaceAnimation;
 
-                if (animation == null || string.IsNullOrWhiteSpace(animation.Id))
+                if (animation == null)
                 {
                     continue;
                 }
 
-                if (GUILayout.Button(animation.Id))
+                if (GUILayout.Button(animation.name))
                 {
-                    operationError = controller.PlayAnimation(animation.Id)
+                    operationError = controller.PlayAnimation(animation)
                         ? null
-                        : $"Could not start animation '{animation.Id}'. Check the controller configuration and Console.";
+                        : $"Could not start animation '{animation.name}'. Check the controller configuration and Console.";
                 }
             }
         }

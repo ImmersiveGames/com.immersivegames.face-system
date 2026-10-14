@@ -24,6 +24,36 @@ namespace ImmersiveGames.FaceSystem
                 && trackLookup.TryGetValue(trackId, out track);
         }
 
+        public bool TryGetTrackByName(string trackName, out SpriteTrack track)
+        {
+            track = null;
+
+            if (string.IsNullOrWhiteSpace(trackName) || tracks == null)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < tracks.Count; i++)
+            {
+                SpriteTrack candidate = tracks[i];
+
+                if (candidate == null || candidate.DisplayName != trackName)
+                {
+                    continue;
+                }
+
+                if (track != null)
+                {
+                    track = null;
+                    return false;
+                }
+
+                track = candidate;
+            }
+
+            return track != null;
+        }
+
         public bool TryGetCoordinate(string trackId, string spriteId, out Vector2Int coordinate)
         {
             coordinate = Vector2Int.zero;

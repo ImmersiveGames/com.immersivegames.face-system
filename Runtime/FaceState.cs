@@ -7,6 +7,7 @@ namespace ImmersiveGames.FaceSystem
     public sealed partial class FaceState : ScriptableObject
     {
         [SerializeField]
+        [HideInInspector]
         private string id;
 
         [SerializeField]
