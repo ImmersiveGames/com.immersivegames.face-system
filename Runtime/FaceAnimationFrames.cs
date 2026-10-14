@@ -1,31 +1,35 @@
 using System;
 using UnityEngine;
 
-public sealed partial class FaceAnimation
+namespace ImmersiveGames.FaceSystem
 {
-    [Serializable]
-    public struct StateFrame
+    public sealed partial class FaceAnimation
     {
-        [SerializeField]
-        private string frameId;
+        [Serializable]
+        public struct StateFrame
+        {
+            [SerializeField]
+            private string frameId;
 
-        [SerializeField]
-        private float duration;
+            [SerializeField]
+            private float duration;
 
-        public string FrameId => frameId;
-        public float Duration => duration;
+            public string FrameId => frameId;
+            public float Duration => duration;
+        }
+
+        [Serializable]
+        public struct SpriteFrame
+        {
+            [SerializeField]
+            private string spriteId;
+
+            [SerializeField]
+            private float duration;
+
+            public string SpriteId => spriteId;
+            public float Duration => duration;
+        }
     }
 
-    [Serializable]
-    public struct SpriteFrame
-    {
-        [SerializeField]
-        private string spriteId;
-
-        [SerializeField]
-        private float duration;
-
-        public string SpriteId => spriteId;
-        public float Duration => duration;
-    }
 }

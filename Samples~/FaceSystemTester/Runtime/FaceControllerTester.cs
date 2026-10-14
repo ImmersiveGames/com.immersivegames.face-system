@@ -1,20 +1,25 @@
 using UnityEngine;
+using ImmersiveGames.FaceSystem;
 
-[RequireComponent(typeof(FaceController))]
-public sealed class FaceControllerTester : MonoBehaviour
+namespace ImmersiveGames.FaceSystem.Samples
 {
-    [SerializeField]
-    private FaceController controller;
-
-    public FaceController Controller => controller;
-
-    private void Reset()
+    [RequireComponent(typeof(FaceController))]
+    public sealed class FaceControllerTester : MonoBehaviour
     {
-        controller = GetComponent<FaceController>();
+        [SerializeField]
+        private FaceController controller;
+
+        public FaceController Controller => controller;
+
+        private void Reset()
+        {
+            controller = GetComponent<FaceController>();
+        }
+
+        private void OnValidate()
+        {
+            controller = GetComponent<FaceController>();
+        }
     }
 
-    private void OnValidate()
-    {
-        controller = GetComponent<FaceController>();
-    }
 }

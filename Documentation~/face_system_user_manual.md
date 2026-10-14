@@ -18,6 +18,16 @@ fx
 New tracks are created entirely through assets and inspector configuration.
 No runtime code changes are required.
 
+## Stable IDs and Initial State
+
+State and animation IDs are explicit, stable identifiers. Renaming an asset
+does not change its ID. Keep IDs unique within each controller list and update
+all references deliberately when changing an ID.
+
+Every FaceController requires a Default State reference. That same asset must
+also appear in the controller's States list. The controller does not choose a
+state based on list order.
+
 ## Workflow
 
 ```text
@@ -193,7 +203,9 @@ mouth    -> HeadRenderer -> index 2
 eyebrows -> HeadRenderer -> index 3
 ```
 
-Material Index must exist in the renderer's material list.
+Material Index must exist in the renderer's material list. Assign the
+Renderer reference directly; the runtime does not search by GameObject name.
+The material must expose _MainTex, _Tiling, and _Offset.
 
 ## MeshRenderer and SkinnedMeshRenderer
 
@@ -206,29 +218,31 @@ Both use the same indexed `MaterialPropertyBlock` runtime path.
 
 ## Runtime API
 
+Both state and animation operations return false when the ID is unknown or the
+configuration cannot be applied. A failed operation leaves the current state
+and active tracks unchanged.
+
 Set the active state:
 
-```csharp
-faceController.SetState("fs.angry.state");
-```
+    if (!faceController.SetState("fs.angry.state"))
+    {
+        Debug.LogWarning("The face state could not be applied.");
+    }
 
 Play an animation:
 
-```csharp
-faceController.PlayAnimation("fa.blink");
-```
+    if (!faceController.PlayAnimation("fa.blink"))
+    {
+        Debug.LogWarning("The face animation could not be started.");
+    }
 
 Stop animation overrides for one dynamic track:
 
-```csharp
-faceController.StopAnimation("eyes");
-```
+    faceController.StopAnimation("eyes");
 
 Stop all animations:
 
-```csharp
-faceController.StopAllAnimations();
-```
+    faceController.StopAllAnimations();
 
 ## FaceControllerTester
 
