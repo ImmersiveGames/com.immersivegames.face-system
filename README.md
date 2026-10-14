@@ -4,14 +4,14 @@ Reusable Unity package for authoring and applying facial expressions to voxel mo
 
 ## Status
 
-Version `0.1.0` is a pre-stable candidate. The public contract is being stabilized; Unity `6000.5.0f1` import and consumer validation are pending. Do not treat this version as a stable `1.x` compatibility promise.
+Version `0.1.1` is a pre-stable candidate. The public contract is being stabilized; Unity `6000.5.0f1` import and consumer validation are pending. Do not treat this version as a stable `1.x` compatibility promise.
 
 ## Installation
 
 Install through Unity Package Manager using the immutable package tag:
 
 ```text
-https://github.com/ImmersiveGames/com.immersivegames.face-system.git#0.1.0
+https://github.com/ImmersiveGames/com.immersivegames.face-system.git#0.1.1
 ```
 
 The package has no dependency on the Immersive Framework or its technical packages. It supports Unity `6000.5` and later versions only where compatibility has been confirmed by the consuming project.

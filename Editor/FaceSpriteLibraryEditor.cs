@@ -5,7 +5,7 @@ using ImmersiveGames.FaceSystem;
 namespace ImmersiveGames.FaceSystem.Editor
 {
     [CustomEditor(typeof(FaceSpriteLibrary))]
-    public sealed class FaceSpriteLibraryEditor : Editor
+    public sealed class FaceSpriteLibraryEditor : UnityEditor.Editor
     {
         private const float PreviewSize = 56f;
         private SerializedProperty tracksProperty;

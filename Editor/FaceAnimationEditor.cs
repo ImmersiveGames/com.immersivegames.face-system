@@ -6,7 +6,7 @@ using ImmersiveGames.FaceSystem;
 namespace ImmersiveGames.FaceSystem.Editor
 {
     [CustomEditor(typeof(FaceAnimation))]
-    public sealed class FaceAnimationEditor : Editor
+    public sealed class FaceAnimationEditor : UnityEditor.Editor
     {
         private const float PreviewSize = 52f;
 

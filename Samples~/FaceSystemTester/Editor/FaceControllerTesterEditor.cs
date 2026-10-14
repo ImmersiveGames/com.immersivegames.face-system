@@ -6,7 +6,7 @@ using ImmersiveGames.FaceSystem.Samples;
 namespace ImmersiveGames.FaceSystem.Samples.Editor
 {
     [CustomEditor(typeof(FaceControllerTester))]
-    public sealed class FaceControllerTesterEditor : Editor
+    public sealed class FaceControllerTesterEditor : UnityEditor.Editor
     {
         private SerializedProperty controllerProperty;
         private string operationError;

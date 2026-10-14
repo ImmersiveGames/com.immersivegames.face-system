@@ -2,6 +2,12 @@
 
 All notable package changes are recorded here.
 
+## [0.1.1] - 2026-10-14 (pre-stable candidate)
+
+- Fixed Editor inspectors to explicitly inherit from UnityEditor.Editor inside namespaces named Editor.
+- Applied the same fix to the optional Face System Tester sample editor.
+- Unity 6000.5.0f1 consumer import validation remains pending; this release is pre-stable.
+
 ## [0.1.0] - 2026-10-14 (pre-stable candidate)
 
 - Introduced the standalone `com.immersivegames.face-system` UPM package.
