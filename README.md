@@ -1,34 +1,52 @@
 # Immersive Face System
 
-Reusable Unity package for authoring and applying facial expressions to voxel models.
+Reusable Unity package for authoring and applying atlas-based facial expressions to voxel models.
 
 ## Status
 
-Version `0.1.1` is a pre-stable candidate. The public contract is being stabilized; Unity `6000.5.0f1` import and consumer validation are pending. Do not treat this version as a stable `1.x` compatibility promise.
+Version `0.1.2` is a pre-stable candidate. The PEGA consumer reported successful package
+import and visible face behavior. The full acceptance matrix and compatibility promise for
+`1.0.0` remain pending.
 
-## Installation
+## Install
 
-Install through Unity Package Manager using the immutable package tag:
+Add the package through Unity Package Manager with this immutable Git URL:
 
 ```text
-https://github.com/ImmersiveGames/com.immersivegames.face-system.git#0.1.1
+https://github.com/ImmersiveGames/com.immersivegames.face-system.git#0.1.2
 ```
 
-The package has no dependency on the Immersive Framework or its technical packages. It supports Unity `6000.5` and later versions only where compatibility has been confirmed by the consuming project.
+The package does not require the Immersive Framework or URP. It supports Unity `6000.5`
+and later versions only where compatibility has been confirmed by the consuming project.
 
-## Package contents
+## Start here
 
-- Runtime: face sprite libraries, states, animations, and an explicitly configured `FaceController`.
-- Editor: inspectors and authoring validation.
-- Built-in shader: face atlas material support.
-- Optional samples: `Face System Tester` and a URP Shader Graph example. URP is not a required package dependency.
-- Documentation: installation, authoring, bindings, shader properties, and migration notes.
+Follow the [Face System User Guide](Documentation~/face_system_user_manual.md) to create
+libraries, states, animations, controller bindings, and materials.
 
-Character-specific atlases, state assets, animation assets, materials, prefabs, and scenes belong to the consuming project and are not included in this package.
+The package includes two optional samples:
 
-## Documentation
+| Sample | Use |
+| --- | --- |
+| Face System Tester | Add Play Mode Inspector controls for registered states and animations. |
+| Universal Render Pipeline Shader | Create an atlas material for projects configured with URP and Shader Graph. |
 
-See [`Documentation~`](Documentation~) in the package source for the user manual, contract notes, architecture, and expression-system reference.
+Samples are imported separately from Package Manager. The guide explains both sample
+workflows and the Built-in Render Pipeline shader option.
+
+## Package ownership
+
+The package core contains reusable runtime/editor code and the Built-in face-atlas shader;
+the URP Shader Graph is an optional sample. Character-specific atlases, state and animation
+assets, materials, prefabs, and scenes belong to the consuming project.
+
+## References
+
+- [User Guide](Documentation~/face_system_user_manual.md)
+- [Package boundary](Documentation~/Face-System-Boundary.md)
+- [Technical specification](Documentation~/face_system_spec.md)
+- [Architecture reference](Documentation~/FACESYSTEM_ARCHITECTURE_V2.md)
+- [Changelog](CHANGELOG.md)
 
 ## License
 

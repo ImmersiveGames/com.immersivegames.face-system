@@ -1,4 +1,4 @@
-# Face System User Manual
+# Face System User Guide
 
 ## Introduction
 
@@ -205,7 +205,7 @@ eyebrows -> HeadRenderer -> index 3
 
 Material Index must exist in the renderer's material list. Assign the
 Renderer reference directly; the runtime does not search by GameObject name.
-The material must expose _MainTex, _Tiling, and _Offset.
+The material must expose `_MainTex`, `_Tiling`, and `_Offset`.
 
 ## MeshRenderer and SkinnedMeshRenderer
 
@@ -244,20 +244,65 @@ Stop all animations:
 
     faceController.StopAllAnimations();
 
-## FaceControllerTester
+## Importing Optional Samples
 
-Add `FaceControllerTester` beside the controller. In Play Mode its inspector
-creates buttons for registered states and animations.
+The samples are not copied into the project automatically. Import one only when you need it:
+
+1. Open `Window > Package Manager`.
+2. Select `In Project`, then `Immersive Face System`.
+3. In the package details, find `Samples` and click `Import` beside the sample you need.
+4. Open the imported folder under `Assets/Samples/Immersive Face System/<package version>/<sample name>`.
+
+Unity's [Package Manager documentation](https://docs.unity3d.com/Manual/upm-ui.html) describes package details and sample import.
+
+## Face System Tester Sample
+
+Import the `Face System Tester` sample using the steps above. The sample contains a component and custom Inspector;
+it does not include a demo scene.
+
+1. Add `FaceControllerTester` to the same GameObject as a configured `FaceController`.
+2. Enter Play Mode.
+3. Use the Inspector buttons to apply registered states, start registered animations, or stop all animations.
+
+The sample is optional. The package runtime does not depend on it.
 
 ## Shader Setup
 
-Shader options:
+Use a shader for the render pipeline configured by the project. The package does not install URP or
+Shader Graph as dependencies.
 
-- URP: `Samples~/UniversalRenderPipeline/FaceAtlasShader.shadergraph`
-- Built-in Render Pipeline: `Shaders/FaceAtlasBuiltIn.shader`
+### URP Shader Graph
 
-Face materials must expose `_Tiling` and `_Offset`. The controller updates
-these properties through `MaterialPropertyBlock`.
+Use this option when the project is configured with URP and has Shader Graph installed.
+
+1. Import `Universal Render Pipeline Shader` from the package's `Samples` section in Package
+   Manager.
+2. In the imported folder, right-click `FaceAtlasShader.shadergraph` and select `Create > Material`.
+3. Assign the material to the renderer material slot used by the corresponding
+   `FaceController` Track Binding.
+4. Keep the atlas assigned in the matching `FaceSpriteLibrary` track. At runtime, the controller
+   supplies the atlas texture and its UV tiling/offset through a `MaterialPropertyBlock`.
+
+### Built-in Render Pipeline
+
+1. Create a Material in the project.
+2. In the Material Inspector, select `Face/Atlas Built-In` from the Shader menu.
+3. Assign the material to the renderer material slot used by the corresponding
+   `FaceController` Track Binding.
+4. Keep the atlas assigned in the matching `FaceSpriteLibrary` track; the controller supplies it at runtime.
+
+### Material Contract
+
+Both included shaders expose the properties used by the controller. A custom shader must expose the same names:
+
+| Property | Purpose |
+| --- | --- |
+| `_MainTex` | Face atlas texture. |
+| `_Tiling` | UV scale for the selected atlas cell. |
+| `_Offset` | UV offset for the selected atlas cell. |
+
+The controller validates these properties and updates them per renderer/material index. It does not
+create material instances at runtime.
 
 ## Face Layering and Render Order
 

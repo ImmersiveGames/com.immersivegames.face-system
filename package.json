@@ -1,7 +1,7 @@
 {
   "name": "com.immersivegames.face-system",
   "displayName": "Immersive Face System",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Reusable voxel face expression system for Unity.",
   "unity": "6000.5",
   "unityRelease": "0f1",
@@ -17,12 +17,12 @@
   "samples": [
     {
       "displayName": "Face System Tester",
-      "description": "Manual demonstration component and custom Inspector.",
+      "description": "Play Mode Inspector controls for registered FaceController states and animations.",
       "path": "Samples~/FaceSystemTester"
     },
     {
       "displayName": "Universal Render Pipeline Shader",
-      "description": "Optional Shader Graph example for URP consumers.",
+      "description": "Optional URP Shader Graph face-atlas shader. Requires URP and Shader Graph in the project.",
       "path": "Samples~/UniversalRenderPipeline"
     }
   ]

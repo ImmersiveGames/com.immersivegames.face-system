@@ -130,6 +130,7 @@ This supports:
 Face shaders must expose:
 
 ```text
+_MainTex
 _Tiling
 _Offset
 ```

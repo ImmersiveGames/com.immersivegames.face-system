@@ -21,4 +21,4 @@
 
 ## Version status
 
-`0.1.1` is a pre-stable candidate. The API and Unity `6000.5.0f1` consumer import require manual validation before a `1.0.0` stability decision.
+`0.1.2` remains pre-stable. The PEGA consumer reported successful package import and visible face behavior; the full acceptance matrix remains pending before a `1.0.0` stability decision.
