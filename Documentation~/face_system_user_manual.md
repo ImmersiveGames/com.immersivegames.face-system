@@ -20,9 +20,16 @@ No runtime code changes are required.
 
 ## Stable IDs and Initial State
 
-State and animation IDs are explicit, stable identifiers. Renaming an asset
-does not change its ID. Keep IDs unique within each controller list and update
-all references deliberately when changing an ID.
+State and animation IDs are explicit, stable string selectors. Renaming an
+asset does not change its ID. They are authored in the Inspector and used by
+`SetState(string)` and `PlayAnimation(string)`; the package does not generate
+them automatically. Keep them unique within each controller list and update
+code references deliberately when changing an ID.
+
+Track IDs connect a library track to state data, animation tracks, and renderer
+bindings. Sprite IDs and semantic Frame IDs connect atlas entries and state
+frames to animations. These are also authored keys, not Unity `.meta` GUIDs;
+the package reports duplicates within their applicable scope.
 
 Every FaceController requires a Default State reference. That same asset must
 also appear in the controller's States list. The controller does not choose a

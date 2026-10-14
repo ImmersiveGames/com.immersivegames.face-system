@@ -2,6 +2,12 @@
 
 All notable package changes are recorded here.
 
+## [1.0.0] - 2026-10-14
+
+- Promoted the documented Face System package contract to stable after the PEGA consumer confirmed import, authoring, runtime expressions, renderer bindings, and shader/sample workflows.
+- Confirmed the identifier model: State and Animation IDs are explicit string selectors; Track, Sprite, and Frame IDs are authoring keys. These IDs are not Unity-generated asset GUIDs.
+- Kept the material shader contract on `_MainTex`, `_Tiling`, and `_Offset`.
+
 ## [0.1.2] - 2026-10-14 (pre-stable candidate)
 
 - Consolidated the package entry point and user guide.

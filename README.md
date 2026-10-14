@@ -4,16 +4,16 @@ Reusable Unity package for authoring and applying atlas-based facial expressions
 
 ## Status
 
-Version `0.1.2` is a pre-stable candidate. The PEGA consumer reported successful package
-import and visible face behavior. The full acceptance matrix and compatibility promise for
-`1.0.0` remain pending.
+Version `1.0.0` is stable. The documented package contract was manually validated in the
+PEGA consumer on Unity `6000.5.0f1` with URP `17.5.0`. Later Unity versions are not claimed
+as validated by that integration.
 
 ## Install
 
 Add the package through Unity Package Manager with this immutable Git URL:
 
 ```text
-https://github.com/ImmersiveGames/com.immersivegames.face-system.git#0.1.2
+https://github.com/ImmersiveGames/com.immersivegames.face-system.git#1.0.0
 ```
 
 The package does not require the Immersive Framework or URP. It supports Unity `6000.5`

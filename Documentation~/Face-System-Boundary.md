@@ -21,4 +21,6 @@
 
 ## Version status
 
-`0.1.2` remains pre-stable. The PEGA consumer reported successful package import and visible face behavior; the full acceptance matrix remains pending before a `1.0.0` stability decision.
+`1.0.0` is stable. The user confirmed the package import, authoring workflow, face states and animations, renderer bindings, and shader/sample paths in PEGA on Unity `6000.5.0f1` with URP `17.5.0`. This is manual consumer validation, not automated QA certification; later Unity versions have not been separately confirmed.
+
+The stable contract includes the documented runtime API, serialized authoring assets, ID behavior, and shader property names `_MainTex`, `_Tiling`, and `_Offset`. State and Animation IDs are explicit strings used by the runtime string APIs; Track, Sprite, and Frame IDs are authored keys that connect package data. The package validates uniqueness within each applicable scope, but does not auto-generate these IDs. Unity `.meta` GUIDs are separate asset identifiers.
