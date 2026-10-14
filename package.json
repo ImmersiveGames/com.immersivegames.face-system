@@ -1,0 +1,29 @@
+{
+  "name": "com.immersivegames.face-system",
+  "displayName": "Immersive Face System",
+  "version": "0.1.0",
+  "description": "Reusable voxel face expression system for Unity.",
+  "unity": "6000.5",
+  "unityRelease": "0f1",
+  "license": "MIT",
+  "licensesUrl": "https://github.com/ImmersiveGames/com.immersivegames.face-system/blob/main/LICENSE.md",
+  "documentationUrl": "https://github.com/ImmersiveGames/com.immersivegames.face-system#readme",
+  "changelogUrl": "https://github.com/ImmersiveGames/com.immersivegames.face-system/blob/main/CHANGELOG.md",
+  "author": {
+    "name": "Immersive Games",
+    "url": "http://www.immersivegame.com.br",
+    "email": "contato@immersivegames.com.br"
+  },
+  "samples": [
+    {
+      "displayName": "Face System Tester",
+      "description": "Manual demonstration component and custom Inspector.",
+      "path": "Samples~/FaceSystemTester"
+    },
+    {
+      "displayName": "Universal Render Pipeline Shader",
+      "description": "Optional Shader Graph example for URP consumers.",
+      "path": "Samples~/UniversalRenderPipeline"
+    }
+  ]
+}
