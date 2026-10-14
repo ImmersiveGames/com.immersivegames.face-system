@@ -101,7 +101,7 @@ namespace ImmersiveGames.FaceSystem.Editor
                 return 0;
             }
 
-            HashSet<int> seenAssetIds = new HashSet<int>();
+            HashSet<EntityId> seenAssetIds = new HashSet<EntityId>();
             HashSet<string> usedIds = new HashSet<string>(StringComparer.Ordinal);
             int repairedDuplicates = 0;
 
@@ -109,7 +109,7 @@ namespace ImmersiveGames.FaceSystem.Editor
             {
                 UnityEngine.Object asset = assets.GetArrayElementAtIndex(i).objectReferenceValue;
 
-                if (asset == null || !seenAssetIds.Add(asset.GetInstanceID()))
+                if (asset == null || !seenAssetIds.Add(asset.GetEntityId()))
                 {
                     continue;
                 }
