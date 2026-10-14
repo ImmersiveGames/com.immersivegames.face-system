@@ -2,8 +2,9 @@
 
 All notable package changes are recorded here.
 
-## [1.1.0-preview.1] - 2026-10-14
+## [1.1.0] - 2026-10-14
 
+- Promoted to stable after the user confirmed the current package works in the PEGA consumer. Validation is manual; Unity automated QA was not run.
 - Added `SetState(FaceState)` and `PlayAnimation(FaceAnimation)` so gameplay code can use authored asset references; string overloads remain compatible.
 - Added generated internal keys for new states, animations, tracks, sprites, and frames; the Inspector now edits friendly names and hides raw keys.
 - Repaired duplicate generated keys in their authoring scope with a visible warning while preserving the first entry's links.
@@ -11,8 +12,6 @@ All notable package changes are recorded here.
 - Replaced obsolete `GetInstanceID()` use with `GetEntityId()` when de-duplicating asset references in the Editor.
 - Added named track lookup and a display-name overload for stopping a track animation.
 - Updated installation guidance to use the untagged Git URL, which follows the default branch.
-- Pending Unity import and PEGA consumer validation for this candidate.
-
 ## [1.0.0] - 2026-10-14
 
 - Promoted the documented Face System package contract to stable after the PEGA consumer confirmed import, authoring, runtime expressions, renderer bindings, and shader/sample workflows.
