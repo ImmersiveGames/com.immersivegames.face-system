@@ -4,20 +4,36 @@ Reusable Unity package for authoring and applying atlas-based facial expressions
 
 ## Status
 
-Version `1.1.0` is the current stable release. The user confirmed that the current package
-works in the PEGA consumer after the candidate updates. This is manual consumer validation;
-Unity automated QA was not run for this release.
+Version `1.1.0` is the current stable code baseline. The Project Owner confirmed
+that the package works in PEGA; this is manual consumer validation, not a Unity
+automated QA result. Signed OpenUPM distribution for this version is being
+prepared. Do not change a consumer to OpenUPM until the package is listed there.
 
 ## Install
 
-Add the package through Unity Package Manager with this Git URL to follow the latest commit
-on the repository's default branch (`main`):
+After the signed `1.1.0` package is listed, add the OpenUPM registry to
+`Packages/manifest.json` with scope `com.immersivegames`, then declare the
+minimum stable SemVer:
 
-```text
-https://github.com/ImmersiveGames/com.immersivegames.face-system.git
+```json
+{
+  "scopedRegistries": [
+    {
+      "name": "OpenUPM",
+      "url": "https://package.openupm.com",
+      "scopes": ["com.immersivegames"]
+    }
+  ],
+  "dependencies": {
+    "com.immersivegames.face-system": "1.1.0"
+  }
+}
 ```
 
-For a reproducible install of this stable release, pin `#1.1.0` explicitly.
+Unity records the exact resolved version and source in
+`Packages/packages-lock.json`. Use Package Manager to update the package; do not
+pin a Git tag or edit the generated lock file by hand. The lockfile retains the
+current resolution until the project is updated.
 
 The package does not require the Immersive Framework or URP. It supports Unity `6000.5`
 and later versions only where compatibility has been confirmed by the consuming project.
